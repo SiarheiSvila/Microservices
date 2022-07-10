@@ -1,0 +1,23 @@
+server:
+  port: 8080
+localstack:
+  uri: http://localhost:4566
+  bucketName: resources-bucket
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/resources
+    username: admin
+    password: admin1234
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  activemq:
+    broker-url: tcp://localhost:61616
+    user: admin
+    password: admin
+    queues:
+      resource-created: RESOURCE_CREATED
+      resource-get: RESOURCE_GET
+      resource-content: RESOURCE_CONTENT
