@@ -8,6 +8,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -24,6 +27,18 @@ public class SongsService {
     public SongClientModel getSong(long id) {
         SongEntityModel entityModel = repository.getReferenceById(id);
         return mapper.toClientModel(entityModel);
+    }
+
+    public List<SongClientModel> getAll() {
+        return repository.findAll().stream()
+                .map(mapper::toClientModel)
+                .collect(Collectors.toList());
+    }
+
+    public SongClientModel findByResourceId(long resourceId) {
+        Optional<SongClientModel> optional = repository.findByResourceId(resourceId)
+                        .map(mapper::toClientModel);
+        return optional.orElse(null);
     }
 
     public long deleteSong(long id) {

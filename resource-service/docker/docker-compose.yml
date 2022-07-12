@@ -17,5 +17,14 @@ services:
     ports:
       - 4566:4566
       - 4571:4571
+  activemq:
+    image: rmohr/activemq:5.15.9-alpine
+    volumes:
+      - './activemq/conf/activemq.xml:/opt/apache-activemq-5.15.9/conf/activemq.xml'
+    networks:
+      - default
+    ports:
+      - "61616:61616" # broker (admin:adminactivemq)(amq:amq)
+      - "8161:8161"   # web    http://boot2docker:8161/admin (admin:admin)
 volumes:
   database-data:

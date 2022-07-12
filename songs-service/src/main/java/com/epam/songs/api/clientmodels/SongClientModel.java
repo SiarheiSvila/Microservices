@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class SongClientModel {
+    private Long id;
     private String name;
     private String artist;
     private String album;

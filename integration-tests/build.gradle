@@ -1,0 +1,76 @@
+plugins {
+    id 'java'
+    id 'idea'
+    id "org.springframework.boot" version "2.7.0"
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    end2endTestImplementation.extendsFrom testImplementation
+    end2endTestRuntimeOnly.extendsFrom testRuntimeOnly
+    end2endTestAnnotationProcessor.extendsFrom testAnnotationProcessor
+}
+
+sourceSets {
+    test {
+        java.srcDirs("src/test/component/java")
+        resources.srcDir("src/test/component/resources")
+    }
+
+    end2endTest {
+        compileClasspath += sourceSets.main.output
+        compileClasspath += sourceSets.test.output
+        runtimeClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.test.output
+        java.srcDirs("src/test/end2end/java")
+        resources.srcDirs("src/test/end2end/resources")
+    }
+}
+
+idea {
+    module {
+        testSourceDirs += project.sourceSets.end2endTest.java.srcDirs
+        testSourceDirs += project.sourceSets.end2endTest.resources.srcDirs
+    }
+}
+
+def springVersion = '2.7.0'
+
+dependencies {
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter', version: springVersion
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springVersion
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: springVersion
+
+    // https://mvnrepository.com/artifact/org.projectlombok/lombok
+    implementation group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    // https://mvnrepository.com/artifact/org.apache.tika/tika-core
+    testImplementation group: 'org.apache.tika', name: 'tika-core', version: '2.4.1'
+    // https://mvnrepository.com/artifact/org.apache.tika/tika-parser-audiovideo-module
+    testImplementation group: 'org.apache.tika', name: 'tika-parser-audiovideo-module', version: '2.4.1'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task end2endTest(type: Test) {
+    group = 'verification'
+    testClassesDirs = sourceSets.end2endTest.output.classesDirs
+    classpath = sourceSets.end2endTest.runtimeClasspath
+
+    useJUnitPlatform()
+}
+
+check.dependsOn end2endTest
+end2endTest.mustRunAfter test

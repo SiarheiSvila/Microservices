@@ -4,7 +4,7 @@ spring:
   activemq:
     broker-url: tcp://localhost:61616
     user: admin
-    password: admin
+    password: adminactivemq
     queues:
       resource-created: RESOURCE_CREATED
       resource-get: RESOURCE_GET
